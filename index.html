@@ -2,367 +2,57 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Panel de Mercado — Snapshot</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radar Mercado</title>
+
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600;700&display=swap');
- 
-  :root{
-    --bg: #07090a;
-    --panel: #0f1416;
-    --panel-border: #232b2e;
-    --amber: #ffb000;
-    --amber-dim: #a87400;
-    --green: #4ade80;
-    --red: #f87171;
-    --text: #e7e2d3;
-    --muted: #7c8a8f;
-    --mono: 'JetBrains Mono', monospace;
-    --sans: 'Inter', sans-serif;
-  }
- 
-  *{box-sizing:border-box;}
- 
-  body{
+body{
     margin:0;
-    background:
-      radial-gradient(ellipse at top, #10161780 0%, transparent 60%),
-      var(--bg);
-    color:var(--text);
-    font-family:var(--sans);
-    padding:0 0 48px 0;
-  }
- 
-  /* ---- Ticker tape ---- */
-  .ticker-wrap{
-    background:#000;
-    border-bottom:1px solid var(--amber-dim);
-    overflow:hidden;
-    white-space:nowrap;
-    padding:9px 0;
-  }
-  .ticker{
-    display:inline-block;
-    font-family:var(--mono);
-    font-size:13px;
-    letter-spacing:0.5px;
-    animation:scroll 38s linear infinite;
-  }
-  .ticker span{ margin-right:48px; }
-  .up{color:var(--green);}
-  .down{color:var(--red);}
-  @keyframes scroll{
-    0%{transform:translateX(0%);}
-    100%{transform:translateX(-50%);}
-  }
- 
-  /* ---- Header ---- */
-  header{
-    max-width:1180px;
-    margin:0 auto;
-    padding:34px 24px 18px 24px;
-  }
-  .eyebrow{
-    font-family:var(--mono);
-    color:var(--amber);
-    font-size:12px;
-    letter-spacing:3px;
-    text-transform:uppercase;
-    margin:0 0 10px 0;
-  }
-  h1{
-    font-family:var(--mono);
-    font-weight:800;
-    font-size:clamp(28px,4vw,42px);
-    margin:0 0 6px 0;
-    color:var(--text);
-    letter-spacing:-0.5px;
-  }
-  .subtitle{
-    color:var(--muted);
-    font-size:14.5px;
-    max-width:640px;
-    line-height:1.55;
-  }
-  .asof{
-    font-family:var(--mono);
-    font-size:12px;
-    color:var(--amber-dim);
-    margin-top:14px;
-    border-top:1px solid var(--panel-border);
-    padding-top:14px;
-  }
- 
-  /* ---- Narrative strip ---- */
-  .narrative{
-    max-width:1180px;
-    margin:0 auto 8px auto;
-    padding:0 24px;
-  }
-  .narrative-box{
-    background:var(--panel);
-    border:1px solid var(--panel-border);
-    border-left:3px solid var(--amber);
-    border-radius:2px;
-    padding:16px 20px;
-    font-size:14px;
-    line-height:1.65;
-    color:#c9c2ac;
-  }
-  .narrative-box b{ color:var(--amber); font-weight:600; }
- 
-  /* ---- Grid ---- */
-  .grid{
-    max-width:1180px;
-    margin:24px auto 0 auto;
-    padding:0 24px;
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
-    gap:16px;
-  }
-  .card{
-    background:var(--panel);
-    border:1px solid var(--panel-border);
-    border-radius:6px;
-    padding:20px;
-    position:relative;
-    overflow:hidden;
-    transition:border-color .15s ease;
-  }
-  .card:hover{ border-color:var(--amber-dim); }
-  .card::before{
-    content:"";
-    position:absolute; top:0; left:0; right:0; height:2px;
-    background:linear-gradient(90deg, var(--amber), transparent);
-    opacity:0.7;
-  }
-  .card-top{
-    display:flex; align-items:center; justify-content:space-between;
-    margin-bottom:14px;
-  }
-  .card-label{
-    font-family:var(--mono);
-    font-size:11.5px;
-    letter-spacing:1.5px;
-    text-transform:uppercase;
-    color:var(--muted);
-  }
-  .card-icon{ font-size:18px; opacity:0.85; }
-  .card-value{
-    font-family:var(--mono);
-    font-weight:700;
-    font-size:30px;
-    color:var(--text);
-    line-height:1;
-    margin-bottom:6px;
-  }
-  .card-delta{
-    font-family:var(--mono);
-    font-size:13px;
-    font-weight:600;
-    margin-bottom:12px;
-  }
-  .card-note{
-    font-size:12.8px;
-    color:var(--muted);
-    line-height:1.55;
-  }
-  .tag{
-    display:inline-block;
-    font-family:var(--mono);
-    font-size:10.5px;
-    letter-spacing:1px;
-    padding:2px 7px;
-    border-radius:20px;
-    margin-top:10px;
-  }
-  .tag.risk-off{ background:#3a1414; color:var(--red); }
-  .tag.risk-on{ background:#12321f; color:var(--green); }
-  .tag.neutral{ background:#2a2415; color:var(--amber); }
- 
-  /* Calendar card spans full width */
-  .calendar-card{
-    grid-column:1 / -1;
-  }
-  .cal-row{
+    background:#07090a;
+    color:#e7e2d3;
+    font-family:Arial,sans-serif;
     display:flex;
-    justify-content:space-between;
-    align-items:baseline;
-    padding:10px 0;
-    border-bottom:1px dashed var(--panel-border);
-    font-size:13.5px;
-  }
-  .cal-row:last-child{ border-bottom:none; }
-  .cal-date{
-    font-family:var(--mono);
-    color:var(--amber);
-    font-weight:600;
-    min-width:150px;
-  }
-  .cal-event{ color:var(--text); flex:1; padding:0 12px;}
-  .cal-context{ color:var(--muted); font-size:12.5px; text-align:right; max-width:340px;}
- 
-  footer{
-    max-width:1180px;
-    margin:28px auto 0 auto;
-    padding:16px 24px 0 24px;
-    color:var(--muted);
-    font-size:11.5px;
-    font-family:var(--mono);
-    border-top:1px solid var(--panel-border);
-  }
- 
-  @media (max-width:640px){
-    .cal-row{ flex-direction:column; gap:4px; }
-    .cal-context{ text-align:left; max-width:100%; }
-  }
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.card{
+    background:#0f1416;
+    border:1px solid #232b2e;
+    border-radius:10px;
+    padding:40px;
+    text-align:center;
+    max-width:600px;
+}
+
+h1{
+    color:#ffb000;
+}
+
+p{
+    line-height:1.5;
+}
 </style>
+
 </head>
 <body>
- 
-<div class="ticker-wrap">
-  <div class="ticker" id="tickerTrack"></div>
+
+<div class="card">
+    <h1>✅ Radar de Mercado</h1>
+
+    <p>
+        GitHub Pages está funcionando correctamente.
+    </p>
+
+    <p>
+        Si estás viendo esta pantalla, el sitio ya quedó publicado.
+    </p>
+
+    <p>
+        Próximo paso: reemplazar este archivo por el dashboard completo.
+    </p>
 </div>
- 
-<header>
-  <p class="eyebrow">Panel de riesgo macro · Snapshot</p>
-  <h1>Radar de Mercado</h1>
-  <p class="subtitle">Ocho señales clave para leer el humor del mercado antes de mirar tus CEDEARs: tasas, dólar, volatilidad, energía, cripto y el calendario que puede mover todo.</p>
-  <p class="asof">DATOS AL 24-JUL-2026 · 08:30 HS ET (rueda de NY) · snapshot manual, no en vivo</p>
-</header>
- 
-<div class="narrative">
-  <div class="narrative-box">
-    <b>Contexto de la jornada:</b> el mercado está en modo <b>risk-off</b>. La escalada en Medio Oriente (ataques hutíes a petroleros sauditas, corte de exportaciones de Kazajistán) empujó al petróleo casi <b>+30% desde niveles pre-conflicto</b>, lo que reavivó el miedo a la inflación y movió las apuestas de la Fed hacia un sesgo más duro. Eso subió los rendimientos del Tesoro, sostuvo al dólar y pinchó al Nasdaq. Bitcoin lo absorbió mejor de lo esperado: los ETF cortaron una racha de siete días de entradas, pero la semana sigue neta positiva.
-  </div>
-</div>
- 
-<div class="grid">
- 
-  <div class="card">
-    <div class="card-top">
-      <span class="card-label">Bono 10 años (US10Y)</span>
-      <span class="card-icon">📈</span>
-    </div>
-    <div class="card-value">4.68%</div>
-    <div class="card-delta up">▲ +0.02 pp intradía</div>
-    <div class="card-note">Máximo desde enero 2025, cuarta suba consecutiva. La suba del petróleo alimenta expectativas de inflación más persistente y presiona a la Fed hacia un sesgo más duro.</div>
-    <span class="tag risk-off">RISK-OFF</span>
-  </div>
- 
-  <div class="card">
-    <div class="card-top">
-      <span class="card-label">Fed Rate — CME FedWatch</span>
-      <span class="card-icon">🏦</span>
-    </div>
-    <div class="card-value">63.5%</div>
-    <div class="card-delta">mantiene tasas el 29-jul</div>
-    <div class="card-note">Rango objetivo actual: 3.50%–3.75%. Próxima reunión FOMC: <b>29 de julio 2026</b>. El shock petrolero recortó la probabilidad que el mercado le asignaba a un recorte más cercano.</div>
-    <span class="tag neutral">EN DEFINICIÓN</span>
-  </div>
- 
-  <div class="card">
-    <div class="card-top">
-      <span class="card-label">DXY — Índice Dólar</span>
-      <span class="card-icon">💵</span>
-    </div>
-    <div class="card-value">101.0</div>
-    <div class="card-delta up">▲ +0.04% en el día</div>
-    <div class="card-note">Sostenido por el diferencial de tasas y demanda de refugio. Rango de las últimas 4 semanas: 100.3 – 101.8.</div>
-    <span class="tag neutral">FIRME</span>
-  </div>
- 
-  <div class="card">
-    <div class="card-top">
-      <span class="card-label">VIX</span>
-      <span class="card-icon">🌪️</span>
-    </div>
-    <div class="card-value">18.7</div>
-    <div class="card-delta up">▲ desde 16.6 el cierre previo</div>
-    <div class="card-note">Sube por la tensión geopolítica, pero todavía lejos de niveles de pánico (52 semanas: 13.4 – 35.3).</div>
-    <span class="tag risk-off">VOLATILIDAD EN ALZA</span>
-  </div>
- 
-  <div class="card">
-    <div class="card-top">
-      <span class="card-label">Petróleo WTI</span>
-      <span class="card-icon">🛢️</span>
-    </div>
-    <div class="card-value">$90-92</div>
-    <div class="card-delta up">▲ +4/6% en el día</div>
-    <div class="card-note">Quinta suba consecutiva por ataques a petroleros sauditas en el Mar Rojo y corte de exportaciones de Kazajistán vía CPC. +30% desde niveles pre-conflicto.</div>
-    <span class="tag risk-off">SHOCK DE OFERTA</span>
-  </div>
- 
-  <div class="card">
-    <div class="card-top">
-      <span class="card-label">Flujos ETF Bitcoin</span>
-      <span class="card-icon">₿</span>
-    </div>
-    <div class="card-value">-$225M</div>
-    <div class="card-delta down">corta racha de 7 días</div>
-    <div class="card-note">Los ETF spot de BTC en EE.UU. cortaron una racha de ~7 días con casi US$1.000M de entradas. Aun así, la semana sigue neta positiva (~+$274M). BTC oscila cerca de US$65.000.</div>
-    <span class="tag neutral">MIXTO</span>
-  </div>
- 
-  <div class="card">
-    <div class="card-top">
-      <span class="card-label">Futuros Nasdaq</span>
-      <span class="card-icon">💻</span>
-    </div>
-    <div class="card-value">25.138</div>
-    <div class="card-delta down">▼ -2.15% en el día</div>
-    <div class="card-note">Presionado por la suba de tasas y del petróleo. El sector chips viene liderando la debilidad de las últimas ruedas.</div>
-    <span class="tag risk-off">VENTA TECH</span>
-  </div>
- 
-  <div class="card calendar-card">
-    <div class="card-top">
-      <span class="card-label">Calendario económico — próximos eventos clave</span>
-      <span class="card-icon">📅</span>
-    </div>
-    <div class="cal-row">
-      <span class="cal-date">Mié 29-jul-2026</span>
-      <span class="cal-event">Decisión de tasas FOMC (14:00 hs ET)</span>
-      <span class="cal-context">Mercado pricea 63.5% de que se mantenga en 3.50%-3.75%</span>
-    </div>
-    <div class="cal-row">
-      <span class="cal-date">Vie 07-ago-2026</span>
-      <span class="cal-event">Reporte de empleo (Nonfarm Payrolls)</span>
-      <span class="cal-context">Última lectura: desempleo 4.2% (jun-26)</span>
-    </div>
-    <div class="cal-row">
-      <span class="cal-date">Mié 12-ago-2026</span>
-      <span class="cal-event">IPC (CPI) de julio</span>
-      <span class="cal-context">Última lectura: 3.5% interanual (jun-26), impulsado por energía</span>
-    </div>
-  </div>
- 
-</div>
- 
-<footer>
-  ⚠ SNAPSHOT MANUAL — no se actualiza solo. Valores obtenidos por búsqueda web al momento de generar este panel; para trading en vivo usá tu terminal/broker. No es recomendación de inversión.
-</footer>
- 
-<script>
-  const items = [
-    {l:"US10Y", v:"4.68%", up:true},
-    {l:"FED HOLD PROB", v:"63.5%", up:false},
-    {l:"DXY", v:"101.0", up:true},
-    {l:"VIX", v:"18.7", up:true},
-    {l:"WTI", v:"$91.5", up:true},
-    {l:"BTC ETF FLOW", v:"-$225M", up:false},
-    {l:"NASDAQ FUT", v:"25,138", up:false},
-    {l:"BTC", v:"$65,400", up:true},
-  ];
-  const track = document.getElementById('tickerTrack');
-  function pill(i){
-    const arrow = i.up ? '▲' : '▼';
-    const cls = i.up ? 'up' : 'down';
-    return `<span>${i.l} <span class="${cls}">${arrow} ${i.v}</span></span>`;
-  }
-  const html = items.map(pill).join('') ;
-  track.innerHTML = html + html; // duplicate for seamless loop
-</script>
- 
+
 </body>
 </html>
